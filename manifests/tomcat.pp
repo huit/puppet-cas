@@ -7,17 +7,17 @@ class cas::tomcat (
   $user,
   $user_home
 ) inherits cas::params {
-  
+
   #            Packages, Services & Files
-  # = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-  package { 
+  # = = = = = = = = = = = = = = = = = = = = = = = = = = =
+  package {
     ['tomcat6', 'tomcat6-admin', 'tomcat6-user']:
       ensure => installed;
     'apache2':
       ensure => purged;
   }
-  
-  file { 
+
+  file {
     "$settings_dir/tomcat-users.xml":
       owner => 'root',
       require => Package['tomcat6'],
@@ -38,8 +38,8 @@ class cas::tomcat (
       owner => 'tomcat6',
       group => 'tomcat6';
   }
-  
-  augeas { 
+
+  augeas {
     "default/tomcat6/AUTHBIND":
       context => "/files/etc/default/tomcat6",
       changes => "set AUTHBIND yes",
@@ -49,14 +49,14 @@ class cas::tomcat (
       changes => "set JAVA_HOME /usr/lib/jvm/java-6-sun",
       notify  => Service["tomcat6"];
   }
-  
-  service { 
+
+  service {
     'tomcat6':
       ensure => running,
       require => Package['tomcat6'];
     'apache2':
       ensure => stopped
   }
-  
+
 }
 
